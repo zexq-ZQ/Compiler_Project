@@ -19,7 +19,7 @@
 #define KEY_NOT_FOUND -1
 #define NO_OF_TERMINALS 61
 #define MAX_SYMBOL_LENGTH 25
-#define COLUMN_SIZE 100
+#define COLUMN_SIZE 25
 
 typedef enum {
 	TK_ASSIGNOP, TK_COMMENT, TK_FIELDID, TK_ID, TK_NUM, TK_RNUM, TK_FUNID, TK_RUID, TK_WITH , TK_PARAMETERS,
@@ -35,14 +35,15 @@ typedef struct {
 	TOKEN name;
 	union {
 		char id[MAX_LEXEME_LENGTH];
-		int num;
+		unsigned int num;
 		double rnum;
 	};
 	int line_no;
 } tokenInfo;
 
 typedef struct {
-	char buffer[BUFFER_SIZE];
+	char ** buffer;
+	int** line_no;
 } twinBuffer;
 
 struct NODE {

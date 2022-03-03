@@ -10,7 +10,7 @@
 #include "lexerDef.h"
 #include <stdio.h>
 
-FILE* getStream(FILE* fp);
+twinBuffer getStream(FILE* fp);
 tokenInfo getNextToken(twinBuffer B);
-void removeComments(char* testcaseFile, char* cleanFile);
+void removeComments(char* testcaseFile, char** cleanFile);
 void fill_lookup_table();
