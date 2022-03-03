@@ -41,6 +41,7 @@ otherStmts stmt otherStmts
 otherStmts epsilon
 stmt assignmentStmt
 stmt iterativeStmt
+stmt conditionalStmt
 stmt ioStmt
 stmt funCallStmt
 assignmentStmt singleOrRecId TK_ASSIGNOP arithmeticExpression TK_SEM
@@ -72,7 +73,7 @@ highPrecedenceOperator TK_MUL
 highPrecedenceOperator TK_DIV
 lowPrecedenceOperators TK_PLUS
 lowPrecedenceOperators TK_MINUS
-booleanExpression TK_OP booleanExpression TK_CL TK_OP booleanExpression TK_CL
+booleanExpression TK_OP booleanExpression TK_CL logicalOp TK_OP booleanExpression TK_CL
 booleanExpression var relationalOp var
 booleanExpression TK_NOT TK_OP booleanExpression TK_CL
 var singleOrRecId
