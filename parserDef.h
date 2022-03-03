@@ -108,16 +108,10 @@ typedef struct
 	rhsnode_ptr tail;
 } rule;
 
-typedef struct {
-	tree_node* parent;
-	tree_node* sibling;
-	tree_node* leftmost_child;
-	tree_node* rightmost_child;
+typedef struct tree_node tree_node;
 
-	tree_node* node_inh;
-	tree_node* node_syn;
-	/*st_wrapper* scope_sym_tab;
-	type* encl_fun_type_ptr;*/
+typedef struct tree_node
+{
 	SYMBOL symbol;
 	tokenInfo token;
 	int num_child;
@@ -136,7 +130,14 @@ typedef struct {
 		int start;
 		int end;
 	}line_nos;
-} tree_node;
+	tree_node * parent;
+	tree_node * sibling;
+	tree_node * leftmost_child;
+	tree_node * rightmost_child;
+
+	tree_node * node_inh;
+	tree_node * node_syn;
+}tree_node;
 
 
 typedef struct
@@ -152,10 +153,10 @@ ull follow_set[NO_OF_NON_TERMINALS][SET_SIZE];
 
 rule grammar[NO_OF_RULES];
 
-//hash_table terminal_table;
-//hash_table non_terminal_table;
+struct NODE_H** terminal_table;
+struct NODE_H** non_terminal_table;
 
 int table[NO_OF_NON_TERMINALS][NO_OF_TERMINALS];
-int num_tree_nodes
+int num_tree_nodes;
 
 #endif

@@ -10,7 +10,7 @@ struct NODE_H{
 	struct NODE_H *next;
 };
 
-struct NODE_H **table;
+struct NODE_H **k_table;
 
 int fast_mod_exp(int a, int b, int m);
 
@@ -20,6 +20,6 @@ void insert_linked_list(struct NODE_H **head, char *keyword, TOKEN token);
 
 void insert_in_hash_table(struct NODE_H **table, char *str, TOKEN token);
 
-void build_hashtable();
+void build_hashtable(char * source, struct NODE_H **table);
 
-int lookup_for_match(char *str);
+int lookup_for_match(char *str, struct NODE_H** table);

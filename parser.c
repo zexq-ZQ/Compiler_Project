@@ -7,7 +7,7 @@
   Mobeen Parwaiz       -   2019A7PS0093P
 *****************************************/
 
-#include "parser.h"
+#include "lookup_table.h"
 #include "parser.h"
 #include "lexer.h"
 #include "ADTset.h"
@@ -140,6 +140,21 @@ void insert_at_end(rhsnode_ptr* ptr_tail, SYMBOL symbol) {
 	*ptr_tail = node;
 }
 
+SYMBOL get_symbol(char str[]) {
+	SYMBOL sym;
+	if ((str[0] == 'T') && (str[1] == 'K')) {
+		sym.is_terminal = true;
+		sym.t = lookup_for_match(str, terminal_table);
+		
+	}
+	else {
+
+		sym.is_terminal = false;
+		sym.nt = lookup_for_match(str, non_terminal_table);
+	}
+	return sym;
+}
+
 /**
  ************************ Produce grammar ***********************
  * - takes a file as input which consists of grammar for language
@@ -148,6 +163,9 @@ void produce_grammar(FILE* fptr) {
 
 	int r_num = 0;
 	char buffer[MAX_LENGTH_RHS];
+
+	build_hashtable("TOKENS.txt", terminal_table);
+	build_hashtable("non_terminals.txt", non_terminal_table);
 
 	while (fgets(buffer, sizeof(buffer), fptr) != NULL) {
 		char* sym_read;
@@ -419,7 +437,7 @@ void pretty_print(char* s) {
  *
  * @param node
  */
-void print_node_for_tool(tree_node* node, tree_type typ) {
+void print_node_for_tool(tree_node* node /*, tree_type typ*/) {
 
 	num_tree_nodes++;
 	if (node == NULL)
@@ -469,20 +487,20 @@ void print_node_for_tool(tree_node* node, tree_type typ) {
  *
  * @param root root node of the tree
  */
-void printParseTree(tree_node* root, tree_type typ) {
+void printParseTree(tree_node* root /*, tree_type typ*/) {
 	if (root == NULL)
 		return;
-	print_node_for_tool(root, typ);
+	print_node_for_tool(root /*, typ*/);
 
 	if (root->leftmost_child)
-		printParseTree(root->leftmost_child, typ);
+		printParseTree(root->leftmost_child /*, typ*/);
 	//   else
 	// 	fprintf(parse_tree_file_ptr,"]");
 
 	if (root->leftmost_child) {
 		tree_node* temp = root->leftmost_child->sibling;
 		while (temp != NULL) {
-			printParseTree(temp, typ);
+			printParseTree(temp /*, typ*/);
 			temp = temp->sibling;
 		}
 	}
@@ -811,5 +829,49 @@ void print_symbol(SYMBOL sym) {
 	}
 	else {
 		printf("%s", non_terminal_string[sym.nt]);
+	}
+}
+
+tree_node* create_tree_node() {
+	tree_node* node = (tree_node*)malloc(sizeof(tree_node));
+	if (node == NULL) {
+		perror("tree_node allocation error..\n");
+		exit(0);
+	}
+	node->visited = false;
+	node->parent = NULL;
+	node->sibling = NULL;
+	node->leftmost_child = NULL;
+	node->rightmost_child = NULL;
+	node->node_inh = NULL;
+	node->node_syn = NULL;
+	node->num_child = 0;
+	node->extra_args = NULL;
+	node->addr = NULL;
+	node->label.next_label = NULL;
+	node->label.cnstrct_code_begin = NULL;
+	strncpy(node->token.id, "", MAX_LEXEME_LENGTH);
+	node->line_nos.start = 0;
+	node->line_nos.end = 0;
+	return node;
+}
+
+void add_child(tree_node* parent, tree_node* child) {
+	if (parent->rightmost_child == NULL) {
+		parent->leftmost_child = child;
+		parent->rightmost_child = child;
+	}
+	else {
+		parent->rightmost_child->sibling = child;
+		parent->rightmost_child = child;
+	}
+	parent->num_child++;
+	child->parent = parent;
+	child->sibling = NULL;
+	if (child->symbol.is_terminal == false) {
+		if (parent->line_nos.start == 0)
+			parent->line_nos.start = child->line_nos.start;
+		if (child->line_nos.end != 0)
+			parent->line_nos.end = child->line_nos.end;
 	}
 }

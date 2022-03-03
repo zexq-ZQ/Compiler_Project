@@ -47,13 +47,13 @@ void insert_in_hash_table(struct NODE_H **table, char *str, TOKEN token){
 	insert_linked_list(&table[index], str, token);
 }
 
-void build_hashtable(){
+void build_hashtable(char * source, struct NODE_H** table){
 	table = (struct NODE_H**)malloc(HASHSIZE*sizeof(struct NODE_H*));
 	for(int i = 0; i<HASHSIZE; i++){
 		table[i] = NULL;
 	}
 	int count = 0;
-	FILE *fp = fopen("keywords.txt","r");
+	FILE *fp = fopen(source,"r");
 	TOKEN token;
 	while(!feof(fp)){
 		char *str = (char*)malloc(20*sizeof(char));
@@ -65,7 +65,7 @@ void build_hashtable(){
 	fclose(fp);
 }
 
-int lookup_for_match(char *str){
+int lookup_for_match(char *str, struct NODE_H** table){
 	int index = calculate_hash(str);
 	struct NODE_H *temp = table[index];
 	while(temp != NULL){

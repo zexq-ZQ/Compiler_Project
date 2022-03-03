@@ -210,7 +210,7 @@ twinBuffer getStream(FILE* fp) {
 }
 
 tokenInfo getNextToken(twinBuffer B) {
-	build_hashtable();
+	build_hashtable("keywords.txt", k_table);
 	int index = 0;
 	struct LIST* list = (struct LIST*)malloc(sizeof(struct LIST));
 	list->count = 0;
@@ -342,7 +342,7 @@ tokenInfo getNextToken(twinBuffer B) {
 			}
 			ungetcM(&B, &index, list);
 			char* lexeme = list_to_array(list->head, list->count);
-			int token = lookup_for_match(lexeme);
+			int token = lookup_for_match(lexeme, k_table);
 			if (token != -1) {
 				return ret_tokenInfo(list, token, *(*(B.line_no) - 1));
 			}
@@ -353,7 +353,7 @@ tokenInfo getNextToken(twinBuffer B) {
 		else {
 			ungetcM(&B, &index, list);
 			char* lexeme = list_to_array(list->head, list->count);
-			int token = lookup_for_match(lexeme);
+			int token = lookup_for_match(lexeme, k_table);
 			if (token != -1) {
 				return ret_tokenInfo(list, token, *(*(B.line_no) - 1));
 			}
@@ -370,7 +370,7 @@ tokenInfo getNextToken(twinBuffer B) {
 		}
 		ungetcM(&B, &index, list);
 		char* lexeme = list_to_array(list->head, list->count);
-		int token = lookup_for_match(lexeme);
+		int token = lookup_for_match(lexeme, k_table);
 		if (token != -1) {
 			return ret_tokenInfo(list, token, *(*(B.line_no) - 1));
 		}
@@ -397,7 +397,7 @@ tokenInfo getNextToken(twinBuffer B) {
 				ungetcM(&B, &index, list);
 
 				char* lexeme = list_to_array(list->head, list->count);
-				if (lookup_for_match(lexeme) == TK_MAIN) {
+				if (lookup_for_match(lexeme, k_table) == TK_MAIN) {
 					return ret_tokenInfo(list, TK_MAIN, *(*(B.line_no) - 1));
 				}
 				else {

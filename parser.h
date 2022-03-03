@@ -11,8 +11,9 @@
 #define PARSER_H
 
 #include "parserDef.h"
-// #include "treeADT.h"
 #include <stdio.h>
+
+
 
 void produce_grammar(FILE* fp);
 
@@ -40,13 +41,19 @@ void print_rule_fset(ull* fset);
 
 void print_parse_table();
 
-void print_parse_tree(tree_node* root);
+void printParseTree(tree_node* root);
 
 // void print_parse_tree_for_tool(tree_node* root, tree_type typ);
 
 void print_rule(int rule_no);
 
+void print_symbol(SYMBOL sym);
+
 tree_node* parseInputSourceCode(FILE* source);
+
+tree_node* create_tree_node();
+
+void add_child(tree_node* parent, tree_node* child);
 
 ull* get_rule_first_set(rhsnode_ptr node);
 
